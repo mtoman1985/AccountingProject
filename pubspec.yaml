@@ -56,8 +56,13 @@ dependencies:
    #Format int
   intl: ^0.18.0
   table_calendar:
+    git:
+      url: https://github.com/mtoman1985/table_calendar
+  #sliding_card:
+  sliding_card:
+  #groubed _list make alist as groub
+  grouped_list:
   #path: ../
-
 
 dev_dependencies:
   flutter_test:

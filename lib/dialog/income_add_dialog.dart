@@ -5,6 +5,7 @@ import 'package:belal_pro/model/checkWalletModel.dart';
 import 'package:belal_pro/model/installmentsModel.dart';
 import 'package:belal_pro/themes/custom_theme.dart';
 import 'package:flutter/material.dart';
+
 class IncomeAddDialog extends StatefulWidget {
   final String title, positiveBtnText, negativeBtnText;
   final GestureTapCallback positiveBtnPressed;
@@ -29,9 +30,9 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
   final String positiveBtnText = "حفظ";
   final String negativeBtnText = "إلفاء الأمر";
   final String title = "إضافة وارد جديد";
-  int selectedIndex=0;
-  int selected_checkWallet=0;
-  int selected_installments=0;
+  int selectedIndex = 0;
+  int selected_checkWallet = 0;
+  int selected_installments = 0;
   late final GestureTapCallback positiveBtnPressed;
 
   final _projectPersonName = GlobalKey<FormState>();
@@ -74,6 +75,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
   void dispose() {
     super.dispose();
   }
+
   Color getColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
       MaterialState.hovered,
@@ -90,6 +92,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
     }
     return Colors.white;
   }
+
   @override
   Widget build(BuildContext context) {
     if (listPersons.isNotEmpty) selectNameList = listPersons[0];
@@ -149,7 +152,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
                           icon: Icon(
                             Icons.home,
                             color: Colors.black,
-                            size:35,
+                            size: 35,
                           ),
                         ),
                         Tab(
@@ -163,7 +166,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
                     SizedBox(
                       height: 500,
                       child: GestureDetector(
-                        onTap:(){
+                        onTap: () {
                           FocusManager.instance.primaryFocus?.unfocus();
                         },
                         child: TabBarView(
@@ -267,7 +270,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
           icon: const Icon(
             Icons.arrow_drop_down,
             color: Colors.blue,
-            size:30,
+            size: 30,
           ),
           alignment: AlignmentDirectional.centerEnd,
           decoration: const InputDecoration(
@@ -327,7 +330,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
           icon: const Icon(
             Icons.arrow_drop_down,
             color: Colors.blue,
-            size:30,
+            size: 30,
           ),
           alignment: AlignmentDirectional.centerEnd,
           decoration: const InputDecoration(
@@ -684,23 +687,26 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
           height: 25,
         ),
         Padding(
-          padding: const EdgeInsets.only(right: 20,left: 20),
-          child: TextButton(onPressed: (){},
-            style:ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blue) ,
-                foregroundColor: MaterialStateProperty.all(Colors.white)
-            ),
-            child:
-            Row(
-              mainAxisAlignment : MainAxisAlignment.spaceBetween,
+          padding: const EdgeInsets.only(right: 20, left: 20),
+          child: TextButton(
+            onPressed: () {},
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.blue),
+                foregroundColor: MaterialStateProperty.all(Colors.white)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 SizedBox(
                   height: 20,
                 ),
-                Text('احفظ المشروع',
-                  style:TextStyle(color:Colors.white,fontSize: 20) ,
+                Text(
+                  'احفظ المشروع',
+                  style: TextStyle(color: Colors.white, fontSize: 20),
                 ),
-                Icon(Icons.save_outlined,
-                  size: 30,)
+                Icon(
+                  Icons.save_outlined,
+                  size: 30,
+                )
               ],
             ),
           ),
@@ -743,7 +749,8 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
         TextButton(
           onPressed: () {
             DbPerson dbPerson = DbPerson();
-            dbPerson.addPersons(_projecatName.text, _projectCurrency.toString());
+            dbPerson.addPersons(
+                _projecatName.text, _projectCurrency.toString());
             IncomeAddDialog positiveBtnPressed;
             Navigator.of(context).pop();
           },
@@ -769,19 +776,19 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
           itemBuilder: (context, i) {
             DateTime date = DateTime(projectStartDate.year,
                 projectStartDate.month + i + 1, projectStartDate.day);
-            Map <String,dynamic> ob={
-              "installment_id":1,
-              "installment_type" : 'المشاريع',
-              "installment_type_id" : "1",
-              "installment_date" : "${date.day}/${date.month}/${date.year}",
-              "installment_kind" : "شيك",
-              "installment_value" : '$onlyTaqsset',
-              "installment_currency" :projectCurrency,
-              "installment_meritDate" : "${date.day}/${date.month}/${date.year}",
-              "installment_payed" : 'لا',
-              "installment_picutre" : "mohamed",
+            Map<String, dynamic> ob = {
+              "installment_id": 1,
+              "installment_type": 'المشاريع',
+              "installment_type_id": "1",
+              "installment_date": "${date.day}/${date.month}/${date.year}",
+              "installment_kind": "شيك",
+              "installment_value": '$onlyTaqsset',
+              "installment_currency": projectCurrency,
+              "installment_meritDate": "${date.day}/${date.month}/${date.year}",
+              "installment_payed": 'لا',
+              "installment_picutre": "mohamed",
             };
-            InstallmentsModel Installment= InstallmentsModel(ob) ;
+            InstallmentsModel Installment = InstallmentsModel(ob);
             allInstallmentsModel.add(Installment);
             return Card(
               color: Colors.cyan,
@@ -804,7 +811,7 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
                             ),
                             onPressed: () {
                               checkWallet(context);
-                              selected_installments=i;
+                              selected_installments = i;
                             },
                           ),
                           IconButton(
@@ -875,32 +882,31 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
 
   Future checkWallet(BuildContext context) {
     selecedtChecksList();
-    return
-      showModalBottomSheet(
-        backgroundColor: const Color.fromARGB(255, 206, 204, 204),
-        context: context,
-        builder: (ctx) => Column(
-          children: [
-            Icon(
-              Icons.remove,
-              color: Colors.grey[600],
+    return showModalBottomSheet(
+      backgroundColor: const Color.fromARGB(255, 206, 204, 204),
+      context: context,
+      builder: (ctx) => Column(
+        children: [
+          Icon(
+            Icons.remove,
+            color: Colors.grey[600],
+          ),
+          Expanded(
+            child: FutureBuilder<String>(
+              future: _loadData(),
+              initialData: 'Loading',
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData && snapshot.data == 'Loading') {
+                  return _buildIndicator();
+                } else {
+                  return _LVListChecks();
+                }
+              },
             ),
-            Expanded(
-              child:FutureBuilder<String>(
-                future: _loadData(),
-                initialData: 'Loading',
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  if(snapshot.hasData && snapshot.data == 'Loading') {
-                    return _buildIndicator();
-                  } else {
-                    return  _LVListChecks();
-                  }
-                },
-              ),
-            ),
-          ],
-        ),
-      );
+          ),
+        ],
+      ),
+    );
   }
 
   Future<String> _loadData() async {
@@ -908,119 +914,133 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
     await Future.delayed(const Duration(seconds: 2));
     return Future<String>.value('Loaded');
   }
+
   Widget _buildIndicator() {
     return const Center(
       child: CircularProgressIndicator(
-          color:Colors.blue,
+          color: Colors.blue,
           backgroundColor: Colors.black26,
-          semanticsLabel:"انتظر حتى يكتمل التحميل"
-      ),
+          semanticsLabel: "انتظر حتى يكتمل التحميل"),
     );
   }
 
-  Widget _LVListChecks()  {
+  Widget _LVListChecks() {
     return ListView.builder(
       // controller: controller,
       itemCount: allCheckWalletModel.length,
-      itemBuilder:  (context,index)=>GestureDetector(
-        onTap:(){
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () {
           setState(() {
-            selectedIndex=index;
+            selectedIndex = index;
           });
-        } ,
+        },
         child: Directionality(
           textDirection: TextDirection.rtl,
           child: Padding(
-            padding: const EdgeInsets.only(left:8,right:8,top:2,bottom:2),
-            child:
-            CardList(index),
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 2, bottom: 2),
+            child: CardList(index),
           ),
         ),
       ),
     );
   }
 
-  Widget CardList (int index){
+  Widget CardList(int index) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return
-            Card(
-              color:Colors.pink[200],
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        CheckList_Value(index),
-                        Text(
-                          allCheckWalletModel[index].type,
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,
-                        ),
-                        Text(
-                          " رقمه: ${allCheckWalletModel[index].no} ",
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,
-                        ),
-                        Text(
-                          "  من : ${allPersons_Check[index].name} ",
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("  التاريخ : ${allCheckWalletModel[index].date}",
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("  تاريخ الاستحقاق: ${allCheckWalletModel[index].exdate}",
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text("  القيمة :${allCheckWalletModel[index].value}  ${allCheckWalletModel[index].currency} ",
-                          style: CustomTheme.lightTheme.textTheme.bodyText1,)
-                      ],
-                    ),
-                  ],
-                ),
+      return Card(
+        color: Colors.pink[200],
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CheckList_Value(index),
+                  Text(
+                    allCheckWalletModel[index].type,
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  ),
+                  Text(
+                    " رقمه: ${allCheckWalletModel[index].no} ",
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  ),
+                  Text(
+                    "  من : ${allPersons_Check[index].name} ",
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  ),
+                ],
               ),
-            );
-        }
-    );
+              Row(
+                children: [
+                  Text(
+                    "  التاريخ : ${allCheckWalletModel[index].date}",
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "  تاريخ الاستحقاق: ${allCheckWalletModel[index].exdate}",
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    "  القيمة :${allCheckWalletModel[index].value}  ${allCheckWalletModel[index].currency} ",
+                    style: CustomTheme.lightTheme.textTheme.bodyText1,
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
+
   Widget CheckList_Value(int index) {
     return StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return Center(
-            child:
-            Checkbox(
-              value: checks_list[index],
-              checkColor:Colors.white,
-              onChanged: (bool? value) {
-                setState(() {
-                  selectedIndex=index;
-                  checks_list[index]=value;
-                  allInstallmentsModel[selectedIndex].type_id=allCheckWalletModel[selectedIndex].id as String;
-                  allInstallmentsModel[selectedIndex].type='المشاريع';
-                  allInstallmentsModel[selectedIndex].date=allCheckWalletModel[selectedIndex].date;
-                  allInstallmentsModel[selectedIndex].kind=allCheckWalletModel[selectedIndex].type;
-                  allInstallmentsModel[selectedIndex].value=allCheckWalletModel[selectedIndex].value as String;
-                  allInstallmentsModel[selectedIndex].currency=allCheckWalletModel[selectedIndex].currency;
-                  allInstallmentsModel[selectedIndex].meritDate=allCheckWalletModel[selectedIndex].exdate;
-                  allInstallmentsModel[selectedIndex].payed=allCheckWalletModel[selectedIndex].done;
-                  allInstallmentsModel[selectedIndex].picutre=allCheckWalletModel[selectedIndex].picture;
-                  allInstallmentsModel[selectedIndex].installment_checkWallent_id=allCheckWalletModel[selectedIndex].id as String;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-          );
-        });
+      return Center(
+        child: Checkbox(
+          value: checks_list[index],
+          checkColor: Colors.white,
+          onChanged: (bool? value) {
+            setState(() {
+              selectedIndex = index;
+              checks_list[index] = value;
+              allInstallmentsModel[selectedIndex].type_id =
+                  allCheckWalletModel[selectedIndex].id as String;
+              allInstallmentsModel[selectedIndex].type = 'المشاريع';
+              allInstallmentsModel[selectedIndex].date =
+                  allCheckWalletModel[selectedIndex].date;
+              allInstallmentsModel[selectedIndex].kind =
+                  allCheckWalletModel[selectedIndex].type;
+              allInstallmentsModel[selectedIndex].value =
+                  allCheckWalletModel[selectedIndex].value as String;
+              allInstallmentsModel[selectedIndex].currency =
+                  allCheckWalletModel[selectedIndex].currency;
+              allInstallmentsModel[selectedIndex].meritDate =
+                  allCheckWalletModel[selectedIndex].exdate;
+              allInstallmentsModel[selectedIndex].payed =
+                  allCheckWalletModel[selectedIndex].done;
+              allInstallmentsModel[selectedIndex].picutre =
+                  allCheckWalletModel[selectedIndex].picture;
+              allInstallmentsModel[selectedIndex].installment_checkWallent_id =
+                  allCheckWalletModel[selectedIndex].id as String;
+              Navigator.pop(context);
+            });
+          },
+        ),
+      );
+    });
   }
+
   void calculateTaqsset() {
     if (projectCheckNo > 0) {
       if (projectCheckNo >= 6 && projectCheckNo <= 12) {
@@ -1048,10 +1068,11 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
     return showDatePicker(
       context: context,
       initialDate: projectStartDate,
-      firstDate: DateTime(2017),
-      lastDate: DateTime(2220),
+      firstDate: DateTime(2019),
+      lastDate: DateTime(2620),
     );
   }
+
   Future<void> selecedtChecksList() async {
     DbCheckWallet dbCheckWallet = DbCheckWallet();
     allPersons_Check.clear();
@@ -1059,14 +1080,15 @@ class _IncomeAddDialogState extends State<IncomeAddDialog> {
     checks_list.clear();
     dbCheckWallet.allCheckWalletNotEnded().then((checks) {
       for (var item in checks) {
-        checks_list.add(false) ;
+        checks_list.add(false);
         CheckWalletModel check = CheckWalletModel.fromMap(item);
-        PersonModel person= PersonModel.fromMap(item);
+        PersonModel person = PersonModel.fromMap(item);
         allCheckWalletModel.add(check);
         allPersons_Check.add(person);
       }
     });
   }
+
   Future<void> selecedtNameList() async {
     DbPerson dbPerson = DbPerson();
     dbPerson.allPersons().then((persons) {
