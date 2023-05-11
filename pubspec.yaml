@@ -62,6 +62,8 @@ dependencies:
   sliding_card:
   #groubed _list make alist as groub
   grouped_list:
+  accordion: ^2.5.1
+  bs_flutter_buttons: any
   #path: ../
 
 dev_dependencies:

@@ -25,6 +25,13 @@ class DbIncome {
     db!.rawQuery(sql);
   }
 
+  Future<List<Map<String, Object?>>> ListImportNames() async {
+    Database? db = await dbHelper.openDb();
+    String sql = 'SELECT * from List_Import_Names';
+    return db!.rawQuery(sql);
+  }
+
+
   Future<void> addIncome(
       String income_date,
       int income_person_id,

@@ -1,3 +1,5 @@
+import 'package:accordion/accordion.dart';
+import 'package:accordion/controllers.dart';
 import 'package:belal_pro/db/dbincome.dart';
 import 'package:belal_pro/db/dbproject.dart';
 import 'package:belal_pro/dialog/income_add_dialog.dart';
@@ -10,7 +12,15 @@ import 'package:belal_pro/dialog/project_add_dialog.dart';
 import 'package:belal_pro/model/PersonModel.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'dart:ui' as ui;
+
+const TextStyle _headerStyle =  TextStyle(
+    color: Color(0xffffffff), fontSize: 18, fontWeight: FontWeight.bold);
+const TextStyle _contentStyleHeader =  TextStyle(
+    color: Color(0xff999999), fontSize: 16, fontWeight: FontWeight.w700);
+const TextStyle _contentStyle =  TextStyle(
+    color: Color(0xff999999), fontSize: 15, fontWeight: FontWeight.normal);
 class IncomePage extends StatefulWidget{
+
   const IncomePage({super.key});
   @override
   State<StatefulWidget> createState() {
@@ -18,12 +28,15 @@ class IncomePage extends StatefulWidget{
     return IncomePageState();
   }
 }
+
+
 class IncomePageState extends State<IncomePage>{
   DbIncome dbIncome  = DbIncome();
   List<IncomeModel> allIncoms = [];
   List<IncomeModel> items = [];
   List<PersonModel?> allPersons = [];
   List<ProjectModel> allProjects = [];
+  List<String> income_person_name=[];
   late FocusNode myFocusNode;
   Color backGroundMsgs = Colors.black;
   List<Color> backGroundMsgsList = [];
@@ -43,6 +56,7 @@ class IncomePageState extends State<IncomePage>{
   @override
   void initState() {
     super.initState();
+    Listss();
     dbIncome = DbIncome();
     myFocusNode = FocusNode();
     setState(() {
@@ -103,7 +117,7 @@ class IncomePageState extends State<IncomePage>{
           ),
           centerTitle: true,
           actions: <Widget>[
-              InkWell(
+            InkWell(
               onTap: () {
                 items.sort((a, b) => a.person_name.compareTo(b.person_name));
                 int i =0;
@@ -300,122 +314,422 @@ class IncomePageState extends State<IncomePage>{
                         //  _callNumber(person.mobile.toString());
                       }
                     },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 3,
-                        vertical: 3,
-                      ),
-                      child: ExpansionTileCard(
-                        elevation: 10,
-                        baseColor: const Color.fromARGB(255, 240, 240, 241),
-                        leading: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.green,
-                          child: Image.asset(
-                            "assets/icon/receiving.png",
-                            height: 35,
-                            width: 35,
-                            color: Colors.white,
-                          ),
-                        ),
-                        title: Column(
-                          children: [
-                            Text(
-                              income.person_name,
-                              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
-                            ),
-                            Text(
-                              income.date,
-                              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
-                            ),Text(
-                              ' ${income.value.toString()}  ${income.currency}',
-                              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
-                            ),Text(
-                              income.paymentMethod,
-                              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
-                            ),
-                          ],
-                        ),
-                        // subtitle:
-                        children: <Widget>[
-                          const Divider(
-                            thickness: 3.0,
-                            height: 3.0,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 3.0,
-                              right: 6.0,
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    // color: Colors.grey[100],
-                                    width: double.infinity,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              'قيمة تحويل العملة إلى الشيكل: ',
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown,),
-                                            ),
-                                            Text(
-                                              ' ${income.currencyValue.toString()}',
-                                              style: const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              '  القيمةالكلية بالشيكل: ',
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
-                                            ),
-                                            Text(
-                                              ' ${income.value*income.currencyValue} شيكل ',
-                                              style: const TextStyle(fontSize: 16),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Text(
-                                              ' الملاحظات:  ',
-                                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                ' ${income.note.toString()}',
-                                                style: const TextStyle(fontSize: 16),
-                                                maxLines: 4,
-                                                overflow: TextOverflow.clip,
-                                                textDirection: TextDirection.rtl,
-                                                textAlign: TextAlign.right,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: listed_import1(income),
                   );
                 }),
           ),
         ),
       ],
     );
+  }
+  Widget listed_import( IncomeModel income){
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 3,
+        vertical: 3,
+      ),
+      child: ExpansionTileCard(
+        elevation: 10,
+        baseColor: const Color.fromARGB(255, 240, 240, 241),
+        leading: CircleAvatar(
+          radius: 40,
+          backgroundColor: Colors.green,
+          child: Image.asset(
+            "assets/icon/receiving.png",
+            height: 35,
+            width: 35,
+            color: Colors.white,
+          ),
+        ),
+        title: Column(
+          children: [
+            Text(
+              income.person_name,
+              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
+            ),
+            Text(
+              income.date,
+              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
+            ),Text(
+              ' ${income.value.toString()}  ${income.currency}',
+              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
+            ),Text(
+              income.paymentMethod,
+              style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
+            ),
+          ],
+        ),
+        // subtitle:
+        children: <Widget>[
+          const Divider(
+            thickness: 3.0,
+            height: 3.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 3.0,
+              right: 6.0,
+            ),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    // color: Colors.grey[100],
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Text(
+                              'قيمة تحويل العملة إلى الشيكل: ',
+                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown,),
+                            ),
+                            Text(
+                              ' ${income.currencyValue.toString()}',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text(
+                              '  القيمةالكلية بالشيكل: ',
+                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
+                            ),
+                            Text(
+                              ' ${income.value*income.currencyValue} شيكل ',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Text(
+                              ' الملاحظات:  ',
+                              style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
+                            ),
+                            Expanded(
+                              child: Text(
+                                ' ${income.note.toString()}',
+                                style: const TextStyle(fontSize: 16),
+                                maxLines: 4,
+                                overflow: TextOverflow.clip,
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+
+  }
+  Widget listed_import1( IncomeModel income){
+    return Accordion(
+        maxOpenSections: 2,
+        headerBackgroundColorOpened: Colors.black54,
+        scaleWhenAnimating: true,
+        openAndCloseAnimation: true,
+        disableScrolling:true,
+        paddingListTop : 5.0,
+        paddingListBottom : 2.0,
+        headerPadding:
+        const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        sectionOpeningHapticFeedback: SectionHapticFeedback.heavy,
+        sectionClosingHapticFeedback: SectionHapticFeedback.light,
+        children: [
+          AccordionSection(
+            isOpen: false,
+            leftIcon: Image.asset(
+              "assets/icon/receiving.png",
+              height: 35,
+              width: 35,
+              color: Colors.white,
+            ),
+            header: Text(income.person_name, style:_headerStyle),
+            contentBorderColor: const Color(0xffffffff),
+            headerBackgroundColorOpened: Colors.amber,
+            content: Accordion(
+              maxOpenSections: 1,
+              headerBackgroundColorOpened: Colors.black54,
+              headerPadding:
+              const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+              children:
+              list_Employ(income),
+            ),
+          ),
+        ]
+    );
+  }
+  List<AccordionSection> list_Employ(IncomeModel income ){
+    return
+      [
+        AccordionSection(
+          isOpen: true,
+          leftIcon:
+          const Icon(Icons.info, color: Colors.white),
+          headerBackgroundColor: Colors.black38,
+          headerBackgroundColorOpened: Colors.black54,
+          header:  Text('  تاريخ الدفعة ${income.date}', style:_headerStyle),
+          content:  DataTable(
+            sortAscending: true,
+            sortColumnIndex: 1,
+            dataRowHeight: 50,
+            showBottomBorder: false,
+            columns: const [
+              DataColumn(
+                  label: Text('الوصف', style: _contentStyleHeader)),
+              DataColumn(
+                  label: Text('القيمة', style: _contentStyleHeader),
+                  numeric: true),
+            ],
+            rows: [
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('القيمة ', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: '${income.value} ${income.currency}'  ,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('القيمة'),
+                      textAlignVertical:TextAlignVertical.bottom,
+                      textAlign : TextAlign.center,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,1,val );
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('طريقة الدفع', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: income.paymentMethod,
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('طريقة الدفع'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,2,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('قيمة التحويل', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: income.currencyValue.toString(),
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('قيمة التحويل'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,3,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('الاجمالي', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: '${income.currencyValue *income.value} شيكل ',
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('الاجمالي'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,3,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+        AccordionSection(
+          isOpen: true,
+          leftIcon:
+          const Icon(Icons.info, color: Colors.white),
+          headerBackgroundColor: Colors.black38,
+          headerBackgroundColorOpened: Colors.black54,
+          header:  Text('  تاريخ الدفعة ${income.date}', style:_headerStyle),
+          content:  DataTable(
+            sortAscending: true,
+            sortColumnIndex: 1,
+            dataRowHeight: 50,
+            showBottomBorder: false,
+            columns: const [
+              DataColumn(
+                  label: Text('الوصف', style: _contentStyleHeader)),
+              DataColumn(
+                  label: Text('القيمة', style: _contentStyleHeader),
+                  numeric: true),
+            ],
+            rows: [
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('القيمة ', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: '${income.value} ${income.currency}'  ,
+                      keyboardType: TextInputType.number,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('القيمة'),
+                      textAlignVertical:TextAlignVertical.bottom,
+                      textAlign : TextAlign.center,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,1,val );
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('طريقة الدفع', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: income.paymentMethod,
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('طريقة الدفع'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,2,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('قيمة التحويل', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: income.currencyValue.toString(),
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('قيمة التحويل'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,3,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+              DataRow(
+                cells: [
+                  const DataCell(
+                    Text('الاجمالي', style: _contentStyle),
+                  ),
+                  DataCell(
+                    TextFormField(
+                      initialValue: '${income.currencyValue *income.value} شيكل ',
+                      keyboardType: TextInputType.text,
+                      style: const TextStyle(color: Colors.black45),
+                      decoration:inputDecoration('الاجمالي'),
+                      textAlign : TextAlign.center,
+                      textAlignVertical:TextAlignVertical.bottom,
+                      onFieldSubmitted: (val) {
+                        setState(() {
+                          // _dialogBuilder(context,listCostumer,i,3,val );
+                        });
+                      },
+                    ),
+                  )
+                ],
+              ),
+            ],
+          ),
+        ),
+      ];
+  }
+
+  InputDecoration inputDecoration (String hintText) {
+    return InputDecoration(
+      hintText:hintText,
+      hintStyle: const TextStyle(fontSize: 20),
+      errorStyle: const TextStyle(fontSize: 14),
+      focusColor: Colors.lightGreen,
+      enabledBorder: InputBorder.none,
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(width: 4, color: Colors.blue),
+      ),
+      errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(
+            width: 2, color: Color(0xffF02E65)),
+      ),
+      border: InputBorder.none,
+    );
+  }
+
+  void Listss () {
+    income_person_name.clear();
+    dbIncome.ListImportNames().then((counts) {
+      for (var item in counts) {
+        item.forEach((key, value) {
+          if (key == "income_person_name") {
+            income_person_name.add(value.toString());
+            print(value.toString());
+          }
+        });
+      }
+    });
   }
 
   bool isPermmission = false;
