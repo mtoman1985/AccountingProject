@@ -3,7 +3,7 @@ import 'package:accordion/controllers.dart';
 import 'package:belal_pro/db/dbincome.dart';
 import 'package:belal_pro/db/dbbuilding.dart';
 import 'package:belal_pro/dialog/income_add_dialog.dart';
-import 'package:belal_pro/model/ProjectModel.dart';
+import 'package:belal_pro/model/BuildingModel.dart';
 import 'package:belal_pro/model/incomeModel.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -35,7 +35,7 @@ class IncomePageState extends State<IncomePage>{
   List<IncomeModel> allIncoms = [];
   List<IncomeModel> items = [];
   List<PersonModel?> allPersons = [];
-  List<ProjectModel> allProjects = [];
+  List<BuildingModel> allBuildings = [];
   List<String> income_person_name=[];
   late FocusNode myFocusNode;
   Color backGroundMsgs = Colors.black;
@@ -95,11 +95,11 @@ class IncomePageState extends State<IncomePage>{
     });
   }
   void addProjectNameToListVeiw(int id) {
-    DbProject dbProject = DbProject();
-    dbProject.searchProjectById(id).then((projects) {
+    DbBuilding dbBuilding =DbBuilding ();
+    dbBuilding.searchBuildingById(id).then((projects) {
       for (var item in projects) {
-        ProjectModel projectModel = ProjectModel.fromMap(item);
-        allProjects.add(projectModel);
+        BuildingModel buildingModel = BuildingModel.fromMap(item);
+        allBuildings.add(buildingModel);
       }
     });
   }

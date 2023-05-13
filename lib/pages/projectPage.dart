@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:belal_pro/db/dbbuilding.dart';
 import 'package:belal_pro/db/dbperson.dart';
 import 'package:belal_pro/dialog/project_add_dialog.dart';
 import 'package:belal_pro/main.dart';
@@ -9,7 +10,7 @@ import 'package:belal_pro/db/dbproject.dart';
 import 'package:belal_pro/dialog/person_add_dialog.dart';
 import 'package:belal_pro/model/PersonModel.dart';
 import 'package:belal_pro/model/PictureModel.dart';
-import 'package:belal_pro/model/ProjectModel.dart';
+import 'package:belal_pro/model/BuildingModel.dart';
 import 'package:expansion_tile_card/expansion_tile_card.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,14 +29,14 @@ class ProjectPage extends StatefulWidget {
 }
 
 class _ProjectPageState extends State<ProjectPage> {
-  DbProject dbProject = DbProject();
+  DbBuilding dbBuilding = DbBuilding();
   DbPicture dbPicutre = DbPicture();
-  List<ProjectModel> allProjects = [];
-  List<ProjectModel> items = [];
+  List<BuildingModel> allProjects = [];
+  List<BuildingModel> items = [];
   List<String> allPicture = [];
   late Map<int, dynamic> itemsPicture = {};
   var allPersonsVar = [];
-  List<ProjectModel> dummySearchList = [];
+  List<BuildingModel> dummySearchList = [];
   late FocusNode myFocusNode;
   Color backGroundMsgs = Colors.black;
   List<Color> backGroundMsgsList = [];
@@ -50,7 +51,7 @@ class _ProjectPageState extends State<ProjectPage> {
   List<String> personsNames = [];
 
   Future _onRefresh() async {
-    dbProject = DbProject();
+    dbBuilding = DbBuilding();
     try {
       await Future.delayed(const Duration(seconds: 3));
       setState(() {
@@ -66,17 +67,17 @@ class _ProjectPageState extends State<ProjectPage> {
     super.initState();
     //listenForPermissionStatus();
     selecedtNameList();
-    dbProject = DbProject();
+    dbBuilding = DbBuilding();
     myFocusNode = FocusNode();
     initial();
     setState(() {
       backGroundMsgsList = [];
       items = [];
     });
-    dbProject.allProjects().then((projects) {
+    dbBuilding.allBuildings().then((projects) {
       for (var item in projects) {
         setState(() {
-          ProjectModel project = ProjectModel.fromMap(item);
+          BuildingModel project = BuildingModel.fromMap(item);
           allProjects.add(project);
           findPicture(project.projectId);
           backGroundMsgsList.add(backGroundMsgs);
@@ -205,8 +206,8 @@ class _ProjectPageState extends State<ProjectPage> {
                     shrinkWrap: true,
                     itemCount: items.length,
                     itemBuilder: (context, i) {
-                      ProjectModel project = items[i];
-                      imageList = itemsPicture[project.projectId];
+                      BuildingModel Building = items[i];
+                      imageList = itemsPicture[Building.projectId];
                       return Dismissible(
                         background: const Padding(
                           padding: EdgeInsets.all(4.0),
@@ -266,7 +267,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                       onPressed: () {
                                         setState(() {
                                           items.removeAt(i);
-                                          dbProject.deleteProject(project.projectId);
+                                          dbBuilding.deleteProject(Building.projectId);
                                           backGroundMsgsList.removeAt(i);
                                         });
 
@@ -309,7 +310,7 @@ class _ProjectPageState extends State<ProjectPage> {
                               ),
                             ),
                             title: Text(
-                              project.projectName,
+                              Building.projectName,
                               style: const TextStyle(fontSize: 22,fontWeight: FontWeight.bold,color: Colors.pink,),
                             ),
                            // subtitle:
@@ -363,7 +364,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown,),
                                                 ),
                                                 Text(
-                                                  ' ${project.projectValue.toString()}  ${project.projectCurrency}',
+                                                  ' ${Building.projectValue.toString()}  ${Building.projectCurrency}',
                                                   style: const TextStyle(fontSize: 16),
                                                 ),
                                               ],
@@ -375,7 +376,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
                                                 ),
                                                 Text(
-                                                  ' ${project.projectFirstPayment.toString()}  ${project.projectCurrency}',
+                                                  ' ${Building.projectFirstPayment.toString()}  ${project.projectCurrency}',
                                                   style: const TextStyle(fontSize: 16),
                                                 ),
                                               ],
@@ -387,7 +388,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
                                                 ),
                                                 Text(
-                                                  ' ${project.projectCheckNo.toString()}',
+                                                  ' ${Building.projectCheckNo.toString()}',
                                                   style: const TextStyle(fontSize: 16),
                                                   textAlign: TextAlign.right,
                                                 ),
@@ -400,7 +401,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown),
                                                 ),
                                                 Text(
-                                                  ' ${project.projectPenfit.toString()} %',
+                                                  ' ${Building.projectPenfit.toString()} %',
                                                   style: const TextStyle(fontSize: 16),
                                                   textAlign: TextAlign.right,
                                                 ),
@@ -413,7 +414,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                   style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: Colors.brown,),
                                                 ),
                                                 Text(
-                                                  ' ${((project.projectPenfit / 100)) * project.projectValue}  ${project.projectCurrency}',
+                                                  ' ${((Building.projectPenfit / 100)) * Building.projectValue}  ${project.projectCurrency}',
                                                   style: const TextStyle(fontSize: 16),
                                                   textAlign: TextAlign.right,
                                                 ),
@@ -429,7 +430,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                 ),
                                                 Expanded(
                                                   child: Text(
-                                                    '  ${((project.projectPenfit / 100) + 1) * project.projectValue}  ${project.projectCurrency}',
+                                                    '  ${((Building.projectPenfit / 100) + 1) * Building.projectValue}  ${project.projectCurrency}',
                                                     style: const TextStyle(fontSize: 16),
                                                     //textAlign: TextAlign.right,
                                                     overflow: TextOverflow.fade, // default is .clip
@@ -439,17 +440,6 @@ class _ProjectPageState extends State<ProjectPage> {
                                               ],
                                             ),
                                             // SizedBox(
-                                            //   width: 500,
-                                            //   child: Row(
-                                            //     children: const [
-                                            //       Expanded(
-                                            //         child: Text("This should easily wrap, and DOES because I'm in BOUNDED SPACE",
-                                            //           overflow: TextOverflow.ellipsis, // default is .clip
-                                            //           maxLines: 2,),// default is 1
-                                            //       ),
-                                            //     ],
-                                            //   ),
-                                            // ),
                                           ],
                                         ),
                                       ),
@@ -508,7 +498,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                         context,
                                                         "camera",
                                                         "Project_${numberFormat.format(maxNoPic)}.jpg",
-                                                        project.projectId);
+                                                        Building.projectId);
                                                   },
                                                 ),
                                                 IconButton(
@@ -526,7 +516,7 @@ class _ProjectPageState extends State<ProjectPage> {
                                                           context,
                                                           "gallery",
                                                           "Project_${numberFormat.format(maxNoPic)}.jpg",
-                                                          project.projectId);
+                                                          Building.projectId);
                                                     });
                                                   },
                                                 ),
